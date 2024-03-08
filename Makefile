@@ -2,8 +2,8 @@
 
 export UVMSZ_HOME = /home/kodeyang/ic_proj/uvm/uvm_practice
 
-CHAPTER = ch2
-SECTION = section2.5/2.5.2
+CHAPTER = ch3
+SECTION = section3.4/3.4.4
 SECTION = prac
 CHDIR   = $(addprefix $(UVMSZ_HOME)/src/, $(CHAPTER))
 SECTDIR = $(addprefix $(CHDIR)/, $(SECTION))
@@ -22,7 +22,7 @@ ifeq ($(flavor INC_PATH), undefined)
   $(error Need include path)
 endif
 
-## some workdir and simv file
+## workdir and simv file
 WORKDIR    = $(shell pwd)
 DST_DIR    = $(WORKDIR)/build
 SIMV       = $(DST_DIR)/simv
@@ -41,23 +41,23 @@ INCDIR    += $(addprefix +incdir, $(INC_PATH))
 DEFINES   += +UVM_NO_DEPRECATED+UVM_OBJECT_MUST_HAVE_CONSTRUCTOR
 #VFLAGS    +=-debug_acc+all -debug_region+cell+encrypt
 VFLAGS    += $(addprefix +define, $(DEFINES))
-VFLAGS    += -sverilog -l vcs.log -q -j8 \
-		 			   $(UVMLIBS) $(TIMESCALE) $(INCDIR)
+VFLAGS    += -sverilog -l vcs.log -q \
+             $(UVMLIBS) $(TIMESCALE) $(INCDIR)
 
 ## runtime flags and defines
-TESTNAME   = my_case1
+TESTNAME   = my_case0
 VERBOSE    = UVM_MEDIUM
 #RUNARGS   += +UVM_CONFIG_DB_TRACE
 RUNARGS   += $(addprefix +UVM_TESTNAME=, $(TESTNAME))
-RUNARGS   += $(addprefix +UVM_VERBOSITY=, $(VERBOSE))
-RUNARGS   += -k $(DST_DIR)/ucli.key -l $(DST_DIR)/outv.log
+#RUNARGS   += $(addprefix +UVM_VERBOSITY=, $(VERBOSE))
+RUNARGS   += -k $(DST_DIR)/ucli.key -l $(DST_DIR)/simv.log
 
 ## wave flags and options(verdi)
 WAVEFILE   = $(DST_DIR)/a.fsdb
 WAVETOOL   = verdi
 WAVEFLAGS += -l wave_dump.log \
-						 $(UVMLIBS) $(INCDIR) $(SRCS) \
-						 -top $(TOP) -sv -q -ssf $(WAVEFILE)
+             $(UVMLIBS) $(INCDIR) $(SRCS) \
+             -top $(TOP) -sv -q -ssf $(WAVEFILE)
 
 ## build rules
 $(SIMV): $(SRCS) $(DEP)

@@ -4,11 +4,11 @@
 class base_test extends uvm_test;
 
    my_env         env;
-   
+
    function new(string name = "base_test", uvm_component parent = null);
       super.new(name,parent);
    endfunction
-   
+
    extern virtual function void build_phase(uvm_phase phase);
    extern virtual function void report_phase(uvm_phase phase);
    `uvm_component_utils(base_test)
