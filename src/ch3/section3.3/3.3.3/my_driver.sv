@@ -49,5 +49,4 @@ task my_driver::drive_one_pkt(my_transaction tr);
    `uvm_info("my_driver", "end drive one pkt", UVM_LOW);
 endtask
 
-
 `endif

@@ -1,9 +1,9 @@
 # Makefile for UVM PRACTICE
 
-export UVMSZ_HOME = /home/kodeyang/ic_proj/uvm/uvm_practice
+export UVMSZ_HOME = $(HOME)/Public/uvm_practice
 
-CHAPTER = ch3
-SECTION = section3.4/3.4.4
+CHAPTER = ch4
+SECTION = section4.2/4.2.1
 SECTION = prac
 CHDIR   = $(addprefix $(UVMSZ_HOME)/src/, $(CHAPTER))
 SECTDIR = $(addprefix $(CHDIR)/, $(SECTION))
@@ -44,13 +44,14 @@ VFLAGS    += $(addprefix +define, $(DEFINES))
 VFLAGS    += -sverilog -l vcs.log -q \
              $(UVMLIBS) $(TIMESCALE) $(INCDIR)
 
+
 ## runtime flags and defines
 TESTNAME   = my_case0
 VERBOSE    = UVM_MEDIUM
-#RUNARGS   += +UVM_CONFIG_DB_TRACE
-RUNARGS   += $(addprefix +UVM_TESTNAME=, $(TESTNAME))
-#RUNARGS   += $(addprefix +UVM_VERBOSITY=, $(VERBOSE))
-RUNARGS   += -k $(DST_DIR)/ucli.key -l $(DST_DIR)/simv.log
+#RUNOPTS   += +UVM_CONFIG_DB_TRACE
+RUNOPTS   += $(addprefix +UVM_TESTNAME=, $(TESTNAME))
+#RUNOPTS   += $(addprefix +UVM_VERBOSITY=, $(VERBOSE))
+RUNOPTS   += -k $(DST_DIR)/ucli.key -l $(DST_DIR)/simv.log
 
 ## wave flags and options(verdi)
 WAVEFILE   = $(DST_DIR)/a.fsdb
@@ -60,24 +61,29 @@ WAVEFLAGS += -l wave_dump.log \
              -top $(TOP) -sv -q -ssf $(WAVEFILE)
 
 ## build rules
+
 $(SIMV): $(SRCS) $(DEP)
-	@$(MAKE) -s -C $(WORKDIR) comp
+	@echo "----- vcs -----"
+	@cd $(DST_DIR) && bash -c \
+	"$(VCS) $(VFLAGS) $(SRCS) -top $(TOP)"
 
 $(WAVEFILE): $(SIMV)
-	@$(MAKE) -s -C $(WORKDIR) run
 
-## miscellaneous
-comp:
-	@echo "----- vcs -----"
-	@cd $(DST_DIR) && bash $(VCS) $(VFLAGS) $(SRCS) -top $(TOP)
+## deault goal
+.DEFAULT_GOAL = simv
 
-run: $(SIMV)
-	@$(SIMV) $(RUNARGS)
-
+## build order control
+simv: $(SIMV)
+run: simv
+	@$(SIMV) $(RUNOPTS)
 wave: $(WAVEFILE)
 	@cd $(DST_DIR) && $(WAVETOOL) $(WAVEFLAGS)
+
+## generate uvm-1.1d tags
+tags:
+	@ctags -R --fields=+nKz -f $@ -R ./uvm-1.1d/src
 
 clean:
 	rm -rf $(DST_DIR)
 
-.PHONY: clean run wave comp
+.PHONY: clean tags run wave simv
