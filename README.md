@@ -1,6 +1,6 @@
-# UVM_PRACTICE FOR KODEYANG
+# UVM_PRACTICE
 
-It's a clone repo from uvm shizhan, I add a Makefile to build it easilly, Need a uvm-1.1d to build.
+It's a clone repo from uvm shizhan. Add some scripts to build and run.
 
 ## Gen tags for uvm
 

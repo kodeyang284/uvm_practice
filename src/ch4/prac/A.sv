@@ -4,6 +4,7 @@
 class A extends uvm_component;
   `uvm_component_utils(A)
 
+  C C_inst;
   uvm_blocking_put_port#(my_transaction) A_port;
 
   function new(string name, uvm_component parent);
@@ -11,22 +12,23 @@ class A extends uvm_component;
   endfunction
 
   extern function void build_phase(uvm_phase phase);
+  extern function void connect_phase(uvm_phase phase);
   extern virtual task main_phase(uvm_phase phase);
 endclass
 
 function void A::build_phase(uvm_phase phase);
   super.build_phase(phase);
   A_port = new("A_port", this);
+  C_inst = C::type_id::create("C_inst", this);
+endfunction
+
+function void A::connect_phase (uvm_phase phase);
+  super.connect_phase(phase);
+  C_inst.C_port.connect(this.A_port);
 endfunction
 
 task A::main_phase(uvm_phase phase);
-  my_transaction tr;
-  repeat (10) begin
-    #10;
-    tr = new("tr");
-    assert(tr.randomize());
-    A_port.put(tr);
-  end
+
 endtask
 
 `endif

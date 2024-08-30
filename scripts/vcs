@@ -1,0 +1,11 @@
+
+#!/bin/sh
+
+dockerexec="docker container exec kode bash -c"
+dir="/root/Public/uvm_practice"
+
+if [ -n "$1" ]; then
+    $dockerexec "vcs $1"
+else
+    echo "....."
+fi

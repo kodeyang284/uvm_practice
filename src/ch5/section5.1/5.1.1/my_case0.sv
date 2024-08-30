@@ -100,7 +100,6 @@ class my_case0 extends base_test;
       `uvm_info(tID, "final_phase is executed", UVM_LOW)
    endfunction 
 
-
 endclass
 
 `endif
