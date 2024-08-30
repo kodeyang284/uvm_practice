@@ -4,48 +4,50 @@
 import uvm_pkg::*;
 `include "my_if.sv"
 `include "my_transaction.sv"
-`include "C.sv"
-`include "A.sv"
-`include "B.sv"
+`include "my_sequencer.sv"
+`include "my_driver.sv"
+`include "my_monitor.sv"
+`include "my_agent.sv"
+`include "my_model.sv"
+`include "my_scoreboard.sv"
 `include "my_env.sv"
 `include "base_test.sv"
 `include "my_case0.sv"
 
 module top_tb;
 
-reg       clk;
-reg       rst_n;
-reg [7:0] rxd;
-reg       rx_dv;
+reg clk;
+reg rst_n;
+reg[7:0] rxd;
+reg rx_dv;
 wire[7:0] txd;
-wire      tx_en;
+wire tx_en;
 
-my_if input_if (clk, rst_n);
+my_if input_if(clk, rst_n);
 my_if output_if(clk, rst_n);
 
 dut my_dut(.clk(clk),
-           .rst_n(rst_n),
-           .rxd(input_if.data),
-           .rx_dv(input_if.valid),
-           .txd(output_if.data),
-           .tx_en(output_if.valid));
-
+          .rst_n(rst_n),
+          .rxd(input_if.data),
+          .rx_dv(input_if.valid),
+          .txd(output_if.data),
+          .tx_en(output_if.valid));
 
 initial begin
-   clk = 0;
-   forever begin
-      #100 clk = ~clk;
-   end
+  clk = 0;
+  forever begin
+     #100 clk = ~clk;
+  end
 end
 
 initial begin
-   rst_n = 1'b0;
-   #1000;
-   rst_n = 1'b1;
+  rst_n = 1'b0;
+  #1000;
+  rst_n = 1'b1;
 end
 
 initial begin
-   run_test();
+  run_test();
 end
 
 initial begin
